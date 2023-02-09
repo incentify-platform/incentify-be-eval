@@ -97,12 +97,13 @@ For performing these challenges, we would like you to fork this public repo into
 ## #1: Create GraphQL Query to get a list of sites
 * Add a new query to the graph schema called `sites` which returns a list of sites for the currently logged in member.
 * This should return all sites for the current member tenant, and any child tenants.
-* Optional query arguments for legalEntityId and tenantId which filter the db query to only sites belonging to that particular tenant or legalEntity.
+* Optional query arguments for legalEntityId and tenantId which filter the db query to only sites belonging to that particular tenant or legalEntity. The tenantId argument should only work if the tenant id provided is a child tenant of the authenticated member's tenant.
 * DB Query and graph response should be paginated (not required but would be nice to see)
 
 ## #2: Create GraphQL Query to get a list of legal entities
 * Add a new query to the graph schema called `legalEntities` which returns a list of sites for the currently logged in member. If the member tenant has child tenants
 * This should return all sites for the current member tenant, and any child tenants.
+* Optional query argument for tenantId which filter the db query to only sites belonging to that particular tenant. This should only work if the tenant id provided is a child tenant of the authenticated member's tenant.
 * DB Query and graph response should be paginated (not required but would be nice to see)
 
 ## #3: Adjust both GraphQL Queries above to respect entity access
