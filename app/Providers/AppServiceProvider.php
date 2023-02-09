@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->bind('App\Interfaces\Repositories\ITenantRepository', 'App\Repositories\DbTenantRepository');
+        $this->app->bind('App\Interfaces\Services\IAuthService', 'App\Services\AuthService');
     }
 }

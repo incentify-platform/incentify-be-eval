@@ -24,6 +24,13 @@ class Tenant
         self::TYPE_PARTNER,
     ];
 
+    public const ALLOWED_TYPES_ENUM = [
+        self::TYPE_ENTERPRISE=>self::TYPE_ENTERPRISE,
+        self::TYPE_TRIAL=>self::TYPE_TRIAL,
+        self::TYPE_BASIC=>self::TYPE_BASIC,
+        self::TYPE_PARTNER=>self::TYPE_PARTNER,
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

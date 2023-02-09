@@ -68,14 +68,14 @@ $factory->defineAs(Tenant::class, 'parent', function(\Faker\Generator $faker, ar
         'updatedAt'=>new \DateTime('now'),
     ]);
 
-    $parentUsers = entity(User::class, $faker->numberBetween(10,100))->create();
+    $parentUsers = entity(User::class, $faker->numberBetween(10,100))->create(['password'=>'123Ez']);
     entity(Member::class)->create(['user'=>$primaryUser, 'tenant'=>$parentTenant, 'isActive'=>true]);
     foreach($parentUsers as $parentUser) {
         entity(Member::class)->create(['user'=>$parentUser, 'tenant'=>$parentTenant, 'isActive'=>true]);
     }
-    $childUsers = entity(User::class, $faker->numberBetween(100,500))->create();
+    $childUsers = entity(User::class, $faker->numberBetween(50,200))->create(['password'=>'123Ez']);
     $childTenants = [];
-    for($foo=0; $foo < $faker->numberBetween(5,20); $foo++) {
+    for($foo=0; $foo < $faker->numberBetween(5,15); $foo++) {
         $users = [];
         foreach($childUsers as $childUser) {
             if($faker->boolean(66)) {
@@ -94,6 +94,27 @@ $factory->defineAs(Tenant::class, 'parent', function(\Faker\Generator $faker, ar
 
     $parentTenant->setChildren(new ArrayCollection($childTenants));
     return $parentTenant;
+});
+
+$factory->defineAs(Tenant::class, 'standard', function(\Faker\Generator $faker, array $attrs) {
+    $title = $faker->company();
+    if(isset($attrs['title'])) {
+        $title = $attrs['title'];
+    }
+    $primaryUser = entity(User::class)->create(['email'=>'primary-'.Str::of($title)->slug('').'@incentify.com', 'password'=>'123Ez']);
+    $users = entity(User::class, $faker->numberBetween(25,100))->create(['password'=>'123Ez']);
+    $users[] = $primaryUser;
+    $tenant = entity(Tenant::class)->create(['users'=>$users, 'primaryUser'=>$primaryUser, 'title'=>$title]);
+
+    $members = [];
+    foreach($users as $user) {
+        $member = entity(Member::class)->create(['user'=>$user, 'tenant'=>$tenant]);
+        $members[] = $member;
+    }
+    $tenant->setMembers(new ArrayCollection($members));
+    $legalEntities = entity(LegalEntity::class, 'load', $faker->numberBetween(10,50))->create(['members'=>$members, 'tenant'=>$tenant]);
+
+    return $tenant;
 });
 
 $factory->define(Member::class, function(\Faker\Generator $faker, array $attrs) {
@@ -148,7 +169,7 @@ $factory->define(Site::class, function(\Faker\Generator $faker, array $attrs) {
         'tenant'=>$attrs['tenant'],
         'createdByMember'=>$attrs['createdByMember'],
         'title'=>$attrs['title'] ?? $faker->streetName().' '.$faker->city(),
-        'address'=>$address,
+        'addressFull'=>$address,
         'lat'=>$lat,
         'lng'=>$lng,
         'legalEntity'=>$legalEntity,
@@ -200,7 +221,7 @@ $factory->defineAs(LegalEntity::class, 'load', function(\Faker\Generator $faker,
             }
             $site = entity(Site::class)->create($siteParams);
             foreach($members as $member) {
-                if($faker->boolean(66)) {
+                if($faker->boolean(25)) {
                     entity(SiteEntityAccess::class)->create(['member'=>$member, 'site'=>$site, 'createdByMember'=>$creatorMember]);
                 }
             }
