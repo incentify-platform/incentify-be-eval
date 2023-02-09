@@ -4,7 +4,9 @@
 Follow these instructions to get the app running with docker compose locally:
 
 From the project root, run 
-`cp .env.example .env` then `composer install` then `./vendor/bin/sails up`
+`cp .env.example .env` then `composer install` then `./vendor/bin/sail up`
+
+(Note, if you don't have php8 and composer on your local machine, you will need to do `sail up` and `sail shell` before running `composer install` )
 
 After this, in another terminal bash into the docker container using: `./vendor/bin/sail shell`
 
