@@ -95,7 +95,7 @@ For performing these challenges, we would like you to fork this public repo into
 * All GraphQL Queries and Mutations require a member authenticated via Authorization header. (see the existing me call for an example, feel free to abstract this)
 
 ## #1: Create GraphQL Query to get a list of sites
-* Add a new query to the graph schema called `sites` which returns a list of sites for the currently logged in member. If the member tenant has child tenants
+* Add a new query to the graph schema called `sites` which returns a list of sites for the currently logged in member.
 * This should return all sites for the current member tenant, and any child tenants.
 * Optional query arguments for legalEntityId and tenantId which filter the db query to only sites belonging to that particular tenant or legalEntity.
 * DB Query and graph response should be paginated (not required but would be nice to see)
