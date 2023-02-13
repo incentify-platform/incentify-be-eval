@@ -2,15 +2,25 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Interfaces\Repositories\ITenantRepository;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
+    protected ITenantRepository $tenantRepo;
+    public function __construct(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
+    {
+        $this->tenantRepo = App::make(ITenantRepository::class);
+        parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -41,7 +51,14 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('user.email', 'password'), $this->boolean('remember'))) {
+
+        $rawCreds = $this->only('email', 'password');
+        $foundMember = $this->tenantRepo->getMemberByEmailPass($rawCreds['email'], $rawCreds['password']);
+
+        if(isset($foundMember)) {
+            Auth::login($foundMember, $this->boolean('remember'));
+        }
+        if (! isset($foundMember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

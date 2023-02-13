@@ -8,4 +8,6 @@ interface ITenantRepository
 {
 
     public function getMemberById(int $id): ?Member;
+
+    public function getMemberByEmailPass(string $email, string $password): ?Member;
 }
