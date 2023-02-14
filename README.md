@@ -78,7 +78,7 @@ The schema endpoint is `http://localhost/graphql` and you must pass the header `
 
 Please take a moment to inspect the db migrations, seeders, and factories to get a general sense of the overall data structure we are working with. Some high level points here are:
 * Tenants all have a primary user. This user should be able to perform any action
-* Tenants may have a parent tenant. Child tenants may only see their individual data, but a parent tenant may see data from all children.
+* Tenants may have a parent tenant. Child tenants may only see their individual data, but a parent tenant may see data from all children. For the purposes of this exercise please assume that parent/child relationships are only a single level deep, rather than n-levels with recurrsion.
 * Users have an email and password
 * A member is the context of a user with a tenant. Actions are performed as a member, rather than a user. This is why entity access and created by are tracked for members rather than users.
 * The basic core data types present are Site and Legal Entity.
